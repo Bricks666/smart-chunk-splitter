@@ -5,7 +5,7 @@
 	"files": [
 		"dist"
 	],
-  "type": "module",
+	"type": "module",
 	"main": "dist/index.cjs",
 	"module": "dits/index.js",
 	"types": "dist/index.d.ts",
@@ -13,7 +13,9 @@
 		"start": "node dist/index.js",
 		"start:dev": "vite build --mode development --watch",
 		"build": "vite build",
-		"test": "vitest"
+		"test": "vitest",
+    "lint": "eslint -c ./.eslintrc.json --ext .ts src/",
+    "format": "prettier"
 	},
 	"keywords": [
 		"vite",
@@ -26,7 +28,14 @@
 	"devDependencies": {
 		"typescript": "^5.3.3",
 		"vite": "^5.0.10",
-		"vitest": "^1.1.0"
+		"vitest": "^1.1.0",
+		"@typescript-eslint/eslint-plugin": "^6.2.0",
+		"@typescript-eslint/parser": "^6.2.0",
+		"eslint": "^8.45.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-plugin-import": "^2.27.5",
+		"prettier": "^3.0.0"
 	},
 	"dependencies": {
 		"@babel/parser": "^7.23.6"

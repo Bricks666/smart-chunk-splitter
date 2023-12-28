@@ -1,1 +1,1 @@
-console.log('Hello world')
+export { splitter } from './splitter';
