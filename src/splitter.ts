@@ -2,7 +2,7 @@ import { nodeGrouper } from './nodeGrouper';
 import { optimizeNodeTree } from './nodeTreeOptimizer';
 import { parse } from './parser';
 import { createPathResolver } from './path-resolver';
-import { normalizePattern } from './patternNormalizer';
+import { normalizePattern } from './pattern-normalizer';
 import { RawPattern } from './types';
 
 interface ChunksRoots {
@@ -16,6 +16,7 @@ interface Aliases {
 export interface SplitterOptions {
 	readonly projectEntryPoint: string;
 	readonly chunksRoots: ChunksRoots;
+	readonly root?: string;
 	readonly extensions?: string[];
 	readonly aliases?: Aliases;
 	readonly ignorePatterns?: RawPattern[];
@@ -25,30 +26,43 @@ export interface SplitterResult {
 	readonly [chunkName: string]: string[];
 }
 
-const DEFAULT_EXTENSIONS = ['js', 'cjs', 'mjs', 'ts'];
+const DEFAULT_EXTENSIONS = ['.js', '.cjs', '.mjs', '.ts'];
 const DEFAULT_IGNORE_PATTERS = ['node_modules'];
+const DEFAULT_ROOT = process.cwd();
 const DEFAULT_ALIASES = {};
 
-export const splitter = (options: SplitterOptions): SplitterResult => {
+/**
+ * @todo
+ * Write e2e
+ */
+export const splitter = async (
+	options: SplitterOptions
+): Promise<SplitterResult | null> => {
 	const {
 		chunksRoots,
 		projectEntryPoint,
+		root = DEFAULT_ROOT,
 		extensions = DEFAULT_EXTENSIONS,
 		aliases = DEFAULT_ALIASES,
 		ignorePatterns = DEFAULT_IGNORE_PATTERS,
 	} = options;
 
 	const pathResolver = createPathResolver({
-		aliases,
 		extensions,
+		root,
+		aliases,
 		ignorePatterns: ignorePatterns.map(normalizePattern),
 	});
 
-	const parsedNodeTree = parse({
+	const parsedNodeTree = await parse({
 		entryPoint: projectEntryPoint,
 		plugins: [],
 		resolvePath: pathResolver,
 	});
+
+	if (!parsedNodeTree.root) {
+		return null;
+	}
 
 	const optimizedNodeTree = optimizeNodeTree({
 		root: parsedNodeTree.root,
@@ -59,7 +73,7 @@ export const splitter = (options: SplitterOptions): SplitterResult => {
 		chunks: Object.fromEntries(
 			Object.entries(chunksRoots).map(([key, value]) => [
 				key,
-				normalizePattern(value),
+				normalizePattern(value)
 			])
 		),
 	});

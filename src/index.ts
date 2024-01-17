@@ -1,11 +1,9 @@
 import { splitter } from './splitter';
 
-const result = splitter({
+splitter({
 	chunksRoots: {
 		chunk_a: './a',
 		chunk_b: './b',
 	},
 	projectEntryPoint: './example',
 });
-
-console.log(result);

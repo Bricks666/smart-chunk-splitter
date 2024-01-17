@@ -1,5 +1,8 @@
 import { A } from './a';
-import { B } from './b';
+import { B as b } from './b';
+import './a';
+import * as asdf from './a';
 
 console.log(A);
-console.log(B);
+console.log(b);
+console.log(asdf);

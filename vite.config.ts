@@ -7,7 +7,7 @@ export default defineConfig({
 			formats: ['cjs', 'es'],
 			fileName: 'index',
 		},
-		minify: true,
+		minify: false,
 		outDir: 'dist',
 		rollupOptions: {
 			external: [/node:.*/],

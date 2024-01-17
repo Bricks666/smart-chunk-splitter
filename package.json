@@ -15,6 +15,7 @@
 		"build": "vite build",
 		"build:watch": "vite build --mode development --watch",
 		"test": "vitest run",
+		"test:watch": "vitest",
 		"test:coverage": "vitest --coverage",
 		"lint": "eslint -c ./.eslintrc.json --ext .ts src/",
 		"format": "prettier",
@@ -29,6 +30,7 @@
 	"author": "Bricks666",
 	"license": "ISC",
 	"devDependencies": {
+		"@babel/types": "^7.23.6",
 		"@typescript-eslint/eslint-plugin": "^6.2.0",
 		"@typescript-eslint/parser": "^6.2.0",
 		"@vitest/coverage-v8": "^1.2.1",
