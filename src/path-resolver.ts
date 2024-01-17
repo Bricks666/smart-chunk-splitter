@@ -1,4 +1,4 @@
-import { extname, normalize } from 'node:path';
+import { extname, normalize, resolve } from 'node:path';
 import stringToRegExp from 'string-to-regexp';
 
 import { MayBePromise } from './types';
@@ -8,6 +8,7 @@ export type PathResolver = (path: string) => MayBePromise<string | null>;
 
 export interface CreatePathResolverOptions {
 	readonly extensions: string[];
+	readonly root: string;
 	readonly aliases?: Record<string, string>;
 	readonly ignorePatterns?: RegExp[];
 }
@@ -15,14 +16,16 @@ export interface CreatePathResolverOptions {
 export const createPathResolver = (
 	options: CreatePathResolverOptions
 ): PathResolver => {
-	const { extensions, aliases = {}, ignorePatterns = [] } = options;
+	const { extensions, root, aliases = {}, ignorePatterns = [], } = options;
 
 	const aliasResolver = createAliasResolver(aliases);
 	const ignoreChecker = createIgnoreChecker(ignorePatterns);
 	const extensionResolver = createExtensionResolver(extensions);
 
 	return async (path) => {
-		const aliasedPath = aliasResolver(path);
+		const resolved = resolve(root, path);
+
+		const aliasedPath = aliasResolver(resolved);
 
 		const ignored = ignoreChecker(aliasedPath);
 
@@ -40,14 +43,18 @@ const createExtensionResolver = (extensions: string[]) => {
 	);
 
 	return async (path: string): Promise<string | null> => {
-		const isResolvedFile = await filesUtils.isExists(path);
+		const exists = await filesUtils.isExists(path);
 
-		if (isResolvedFile) {
-			const hasSupportedExtension = extensions.some(
-				(extension) => extname(path) === extension
-			);
+		if (exists) {
+			const file = await filesUtils.isFile(path);
 
-			return hasSupportedExtension ? path : null;
+			if (file) {
+				const hasSupportedExtension = extensions.some(
+					(extension) => extname(path) === extension
+				);
+
+				return hasSupportedExtension ? path : null;
+			}
 		}
 
 		const existing = await Promise.all(
