@@ -11,11 +11,14 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"start": "node dist/index.js",
-		"start:dev": "vite build --mode development --watch",
+		"start:dev": "nodemon dist/index.js",
 		"build": "vite build",
-		"test": "vitest",
-    "lint": "eslint -c ./.eslintrc.json --ext .ts src/",
-    "format": "prettier"
+		"build:watch": "vite build --mode development --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest --coverage",
+		"lint": "eslint -c ./.eslintrc.json --ext .ts src/",
+		"format": "prettier",
+		"prepare": "husky install"
 	},
 	"keywords": [
 		"vite",
@@ -26,18 +29,24 @@
 	"author": "Bricks666",
 	"license": "ISC",
 	"devDependencies": {
-		"typescript": "^5.3.3",
-		"vite": "^5.0.10",
-		"vitest": "^1.1.0",
 		"@typescript-eslint/eslint-plugin": "^6.2.0",
 		"@typescript-eslint/parser": "^6.2.0",
+		"@vitest/coverage-v8": "^1.2.1",
 		"eslint": "^8.45.0",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-import": "^2.27.5",
-		"prettier": "^3.0.0"
+		"husky": "^8.0.3",
+		"nodemon": "^3.0.3",
+		"prettier": "^3.0.0",
+		"typescript": "^5.3.3",
+		"vite": "^5.0.10",
+		"vitest": "^1.2.1"
 	},
 	"dependencies": {
-		"@babel/parser": "^7.23.6"
+		"@babel/parser": "^7.23.6",
+		"@types/node": "^20.11.5",
+		"fsx-node": "^0.2.0",
+		"string-to-regexp": "^0.1.0"
 	}
 }
