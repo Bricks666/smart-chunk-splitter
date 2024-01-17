@@ -1,12 +1,12 @@
 import { nodeGrouper } from './nodeGrouper';
 import { optimizeNodeTree } from './nodeTreeOptimizer';
 import { parse } from './parser';
-import { createPathResolver } from './pathResolver';
+import { createPathResolver } from './path-resolver';
 import { normalizePattern } from './patternNormalizer';
 import { RawPattern } from './types';
 
 interface ChunksRoots {
-	readonly [chunksName: string]: RawPattern;
+	readonly [chunksName: string]: string;
 }
 
 interface Aliases {
